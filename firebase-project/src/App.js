@@ -1,10 +1,11 @@
 import "./App.css";
-import { db, colRef } from "./firebase";
+import ModifyData from "./ModifyData";
 
 function App() {
   return (
     <div className="App">
       <h2>Learning Firebase 😁</h2>
+      <ModifyData />
     </div>
   );
 }
