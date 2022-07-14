@@ -1,5 +1,10 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  onSnapshot,
+} from "firebase/firestore";
 
 console.log("firebase");
 
@@ -23,13 +28,20 @@ const db = getFirestore();
 const colRef = collection(db, "Books");
 
 // get data
-getDocs(colRef)
-  .then((snapshot) => {
-    const docs = snapshot.docs;
-    const books = [];
-    docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
-    console.log(books);
-  })
-  .catch((err) => console.log(err));
+// getDocs(colRef)
+//   .then((snapshot) => {
+//     const docs = snapshot.docs;
+//     const books = [];
+//     docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
+//     console.log(books);
+//   })
+//   .catch((err) => console.log(err));
 
+// Realtime Data change listener
+onSnapshot(colRef, (snapshot) => {
+  const docs = snapshot.docs;
+  const books = [];
+  docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
+  console.log(books);
+});
 export { db, colRef };
