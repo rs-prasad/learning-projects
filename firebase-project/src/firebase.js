@@ -7,6 +7,8 @@ import {
   query,
   where,
   orderBy,
+  getDoc,
+  doc,
 } from "firebase/firestore";
 
 console.log("firebase");
@@ -53,4 +55,12 @@ onSnapshot(qRef, (snapshot) => {
   docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
   console.log(books);
 });
+
+// getting single document
+const docRef = doc(db, "Books", "2yru3v9IN8pLPy1Sj7u5");
+//getDoc(docRef).then((doc) => console.log(doc.data()));
+onSnapshot(docRef, (doc) => {
+  console.log(doc.data(), doc.id);
+});
+
 export { db, colRef };

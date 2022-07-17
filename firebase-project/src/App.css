@@ -1,4 +1,5 @@
 .add-data,
+.update-doc,
 .delete-data {
   display: flex;
   flex-direction: column;

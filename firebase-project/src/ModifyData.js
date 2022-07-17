@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { addDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  doc,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { colRef, db } from "./firebase";
 
 const ModifyData = () => {
@@ -8,11 +14,12 @@ const ModifyData = () => {
   const deleteData = useRef();
   const [addBook, setAddBook] = useState({ title: "", author: "" });
   const [deleteBook, setDeleteBook] = useState({ id: "" });
+  const [updateDocId, setUpdateDocId] = useState("");
 
   //UseEffects
   //useEffect(() => console.log(addBook), [addBook]);
 
-  //Event listeners
+  //Change Event listeners
   const handleAddDataChange = (e) => {
     setAddBook({ ...addBook, [e.target.name]: e.target.value });
   };
@@ -20,6 +27,12 @@ const ModifyData = () => {
   const handleDeleteDataChange = (e) => {
     setDeleteBook({ ...deleteBook, [e.target.name]: e.target.value });
   };
+
+  const handleUpdateDocChange = (e) => {
+    setUpdateDocId(e.target.value);
+  };
+
+  // Submit Event listeners
   const handleAddDataSubmit = (e) => {
     e.preventDefault();
     addDoc(colRef, { ...addBook, createdAt: serverTimestamp() })
@@ -39,6 +52,15 @@ const ModifyData = () => {
         alert("Book deleted");
       })
       .catch((err) => console.error(err));
+  };
+
+  const handelUpdateDocSubmit = (e) => {
+    e.preventDefault();
+    const docRef = doc(db, "Books", updateDocId);
+    updateDoc(docRef, { title: "updated title for test" }).then(() => {
+      alert("doc updated");
+      setUpdateDocId("");
+    });
   };
 
   return (
@@ -83,6 +105,18 @@ const ModifyData = () => {
         />
         <br />
         <button type="submit">Delete book</button>
+      </form>
+      <form className="update-doc" onSubmit={(e) => handelUpdateDocSubmit(e)}>
+        <h4>Update Doc</h4>
+        <label htmlFor="id">Document ID</label>
+        <input
+          type="text"
+          name="id"
+          value={updateDocId}
+          onChange={(e) => handleUpdateDocChange(e)}
+        />
+        <br />
+        <button type="submit">UpdateDoc</button>
       </form>
     </>
   );
