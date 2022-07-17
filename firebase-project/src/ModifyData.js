@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { addDoc, deleteDoc, doc } from "firebase/firestore";
+import { addDoc, deleteDoc, doc, serverTimestamp } from "firebase/firestore";
 import { colRef, db } from "./firebase";
 
 const ModifyData = () => {
@@ -22,7 +22,7 @@ const ModifyData = () => {
   };
   const handleAddDataSubmit = (e) => {
     e.preventDefault();
-    addDoc(colRef, addBook)
+    addDoc(colRef, { ...addBook, createdAt: serverTimestamp() })
       .then(() => {
         setAddBook({ title: "", author: "" });
         alert("new book added");

@@ -4,6 +4,9 @@ import {
   collection,
   getDocs,
   onSnapshot,
+  query,
+  where,
+  orderBy,
 } from "firebase/firestore";
 
 console.log("firebase");
@@ -26,6 +29,12 @@ const db = getFirestore();
 
 // collection ref
 const colRef = collection(db, "Books");
+// queries
+const qRef = query(
+  colRef,
+  where("author", "==", "auth1"),
+  orderBy("createdAt", "desc")
+);
 
 // get data
 // getDocs(colRef)
@@ -38,7 +47,7 @@ const colRef = collection(db, "Books");
 //   .catch((err) => console.log(err));
 
 // Realtime Data change listener
-onSnapshot(colRef, (snapshot) => {
+onSnapshot(qRef, (snapshot) => {
   const docs = snapshot.docs;
   const books = [];
   docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
