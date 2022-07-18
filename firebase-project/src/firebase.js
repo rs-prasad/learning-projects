@@ -10,6 +10,7 @@ import {
   getDoc,
   doc,
 } from "firebase/firestore";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 console.log("firebase");
 
@@ -49,7 +50,7 @@ const qRef = query(
 //   .catch((err) => console.log(err));
 
 // Realtime Data change listener
-onSnapshot(qRef, (snapshot) => {
+const unsubqRef = onSnapshot(qRef, (snapshot) => {
   const docs = snapshot.docs;
   const books = [];
   docs.forEach((doc) => books.push({ ...doc.data(), id: doc.id }));
@@ -59,8 +60,16 @@ onSnapshot(qRef, (snapshot) => {
 // getting single document
 const docRef = doc(db, "Books", "2yru3v9IN8pLPy1Sj7u5");
 //getDoc(docRef).then((doc) => console.log(doc.data()));
-onSnapshot(docRef, (doc) => {
+const unsubDocument = onSnapshot(docRef, (doc) => {
   console.log(doc.data(), doc.id);
 });
 
-export { db, colRef };
+// authentication
+const auth = getAuth();
+
+// subscribing to auth change
+const unsubAuth = onAuthStateChanged(auth, (user) =>
+  console.log("current user: ", user)
+);
+
+export { db, colRef, auth, unsubDocument, unsubqRef, unsubAuth };

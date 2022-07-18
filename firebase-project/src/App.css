@@ -1,6 +1,7 @@
 .add-data,
 .update-doc,
-.delete-data {
+.delete-data,
+.signup {
   display: flex;
   flex-direction: column;
   max-width: 500px;

@@ -6,7 +6,19 @@ import {
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
-import { colRef, db } from "./firebase";
+import {
+  colRef,
+  db,
+  auth,
+  unsubDocument,
+  unsubqRef,
+  unsubAuth,
+} from "./firebase";
+import {
+  createUserWithEmailAndPassword,
+  signOut,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 
 const ModifyData = () => {
   //hooks
@@ -63,6 +75,43 @@ const ModifyData = () => {
     });
   };
 
+  const handleSignupSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((cred) => {
+        alert("user signed in with: " + cred.user);
+        console.log(cred.user);
+        e.target.reset();
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  const handleSignOut = () => {
+    signOut(auth)
+      .then(() => alert("user signed out"))
+      .catch((err) => console.log(err.message));
+  };
+
+  const handleSignInSubmit = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value;
+    const password = e.target.password.value;
+    signInWithEmailAndPassword(auth, email, password)
+      .then((cred) => {
+        alert("you are signed in");
+        console.log(cred.user);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleUnsubscribeClick = () => {
+    console.log("unsubscribing all");
+    unsubAuth();
+    unsubDocument();
+    unsubqRef();
+  };
   return (
     <>
       <form
@@ -118,6 +167,28 @@ const ModifyData = () => {
         <br />
         <button type="submit">UpdateDoc</button>
       </form>
+      <form className="signup" onSubmit={(e) => handleSignupSubmit(e)}>
+        <h4>SignUp</h4>
+        <label htmlFor="email">Email</label>
+        <input type="email" name="email" id="email" />
+        <label htmlFor="password">Password</label>
+        <input type="password" name="password" />
+        <br />
+        <button type="submit">SignUp</button>
+      </form>
+      <div>
+        <button onClick={handleSignOut}>Sign Out</button>
+      </div>
+      <form className="sign-in" onSubmit={(e) => handleSignInSubmit(e)}>
+        <h4>SignUp</h4>
+        <label htmlFor="email">Email</label>
+        <input type="email" name="email" id="email" />
+        <label htmlFor="password">Password</label>
+        <input type="password" name="password" />
+        <br />
+        <button type="submit">SignIn</button>
+      </form>
+      <button onClick={handleUnsubscribeClick}> unsubscribe </button>
     </>
   );
 };
